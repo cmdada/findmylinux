@@ -10,8 +10,8 @@ depends=('python' 'python-cryptography' 'python-requests' 'python-gobject'
          'gtk4' 'libadwaita' 'libshumate' 'bluez' 'bluez-utils'
          'geoclue' 'polkit' 'findmylinux-anisette')
 install='findmylinux.install'
-source=("$pkgname-$pkgver.tar.gz")
-sha256sums=('SKIP')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
+sha256sums=('32e7cfbc859c97437b3bf6c9862301a277041d2655fa00ffabf480ac5150c0df')
 
 check() {
   cd "$srcdir/$pkgname-$pkgver"

@@ -6,7 +6,7 @@ network](https://developer.apple.com/find-my/) as an
 passing iPhone picks up the advertisement and uploads an encrypted location
 report to Apple; only the private key in `keys/` can decrypt those reports.
 
-This is the tag half only — it broadcasts. Fetching and displaying the reports
+This is the tag half only, it broadcasts. Fetching and displaying the reports
 needs a separate piece (see [Seeing the locations](#seeing-the-locations)).
 
 ## Install
