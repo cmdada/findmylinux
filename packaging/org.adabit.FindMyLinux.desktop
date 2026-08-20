@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Find My Linux
+Comment=Track this laptop on Apple's Find My network
+Exec=/usr/bin/findmylinux-gui
+Icon=find-location
+Terminal=false
+Categories=Network;
+StartupNotify=true
+StartupWMClass=org.adabit.FindMyLinux

@@ -1,0 +1,13 @@
+[Unit]
+Description=Feed Find My location to geoclue (system location source)
+After=mh-endpoint.service
+Wants=mh-endpoint.service
+
+[Service]
+Type=exec
+ExecStart=%h/code/findmylinux/.venv/bin/python %h/code/findmylinux/findmylinux.py location-daemon
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target

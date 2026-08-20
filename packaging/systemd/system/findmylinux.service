@@ -1,0 +1,17 @@
+[Unit]
+Description=Advertise this machine on Apple's Find My network
+Documentation=https://github.com/seemoo-lab/openhaystack
+After=bluetooth.service
+Requires=bluetooth.service
+StartLimitIntervalSec=120
+StartLimitBurst=2
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/findmylinux start --adapter hci0
+ExecStopPost=/usr/bin/findmylinux restore --adapter hci0
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
