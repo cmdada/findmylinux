@@ -6,6 +6,7 @@ and just presents it. Network fetches run on a worker thread and marshal back to
 the main loop with GLib.idle_add
 """
 
+import getpass
 import subprocess
 import threading
 import time
@@ -23,8 +24,10 @@ APP_ID = "org.adabit.FindMyLinux"
 REFRESH_SECONDS = 300
 DEFAULT_ZOOM = 16
 
+ADVERTISE_UNIT = f"findmylinux@{getpass.getuser()}.service"
+
 SERVICES = [
-    ("Advertising", "findmylinux.service", "system"),
+    ("Advertising", ADVERTISE_UNIT, "system"),
     ("Anisette", "findmylinux-anisette.service", "user"),
     ("Location daemon", "findmylinux-location.service", "user"),
 ]
@@ -369,7 +372,7 @@ class Window(Adw.ApplicationWindow):
             switch.set_active(active)
             switch.handler_unblock_by_func(self._on_toggle)
 
-        if not self._tried_autostart and not states.get("findmylinux.service", False):
+        if not self._tried_autostart and not states.get(ADVERTISE_UNIT, False):
             self._tried_autostart = True
             self._control_advertising("start", lambda *_: self._refresh_services())
 
@@ -422,18 +425,23 @@ class Window(Adw.ApplicationWindow):
 
     def _control_advertising(self, verb, on_finish):
         """Start/stop the system advertising service via pkexec, installing its
-        unit into /etc/systemd/system first if systemd doesn't know it yet."""
+        unit into /etc/systemd/system first if systemd doesn't know it yet.
+
+        No-ops when the unit is already in the wanted state, so opening the app
+        with advertising up doesn't throw an authentication dialog."""
         src = findmylinux.ROOT / "systemd"
 
         def work():
+            if service_active("system", ADVERTISE_UNIT) == (verb == "start"):
+                return None
             script = (
-                "if ! systemctl cat findmylinux.service >/dev/null 2>&1; then "
-                f"install -Dm644 '{src}/findmylinux.service' "
-                "/etc/systemd/system/findmylinux.service && "
-                f"install -Dm644 '{src}/findmylinux-resume.service' "
-                "/etc/systemd/system/findmylinux-resume.service && "
+                f"if ! systemctl cat {ADVERTISE_UNIT} >/dev/null 2>&1; then "
+                f"install -Dm644 '{src}/findmylinux@.service' "
+                "/etc/systemd/system/findmylinux@.service && "
+                f"install -Dm644 '{src}/findmylinux-resume@.service' "
+                "/etc/systemd/system/findmylinux-resume@.service && "
                 "systemctl daemon-reload; fi; "
-                f"systemctl {verb} findmylinux.service"
+                f"systemctl {verb} {ADVERTISE_UNIT}"
             )
             return subprocess.run(["pkexec", "/bin/sh", "-c", script],
                                   capture_output=True, text=True)

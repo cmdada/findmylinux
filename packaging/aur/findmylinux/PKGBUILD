@@ -1,6 +1,6 @@
 # Maintainer: ada <cmdada@proton.me>
 pkgname=findmylinux
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="Use Apple's Find My network to estimate your system GPS location, with a GTK app for configuration and status"
 arch=('any')
@@ -30,10 +30,10 @@ package() {
   install -Dm755 packaging/bin/findmylinux     "$pkgdir/usr/bin/findmylinux"
   install -Dm755 packaging/bin/findmylinux-gui "$pkgdir/usr/bin/findmylinux-gui"
 
-  install -Dm644 packaging/systemd/system/findmylinux.service \
-    "$pkgdir/usr/lib/systemd/system/findmylinux.service"
-  install -Dm644 packaging/systemd/system/findmylinux-resume.service \
-    "$pkgdir/usr/lib/systemd/system/findmylinux-resume.service"
+  install -Dm644 packaging/systemd/system/findmylinux@.service \
+    "$pkgdir/usr/lib/systemd/system/findmylinux@.service"
+  install -Dm644 packaging/systemd/system/findmylinux-resume@.service \
+    "$pkgdir/usr/lib/systemd/system/findmylinux-resume@.service"
   install -Dm644 packaging/systemd/user/findmylinux-location.service \
     "$pkgdir/usr/lib/systemd/user/findmylinux-location.service"
 

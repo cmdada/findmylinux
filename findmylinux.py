@@ -579,9 +579,22 @@ def btmgmt(index, *args, check=True):
     return out
 
 
+def has_net_admin():
+    if os.geteuid() == 0:
+        return True
+    try:
+        for line in Path("/proc/self/status").read_text().splitlines():
+            if line.startswith("CapEff:"):
+                return bool(int(line.split()[1], 16) & (1 << 12))
+    except OSError:
+        pass
+    return False
+
+
 def require_root():
-    if os.geteuid() != 0:
-        sys.exit("needs root; run via the systemd unit or with run0/pkexec.")
+    if not has_net_admin():
+        sys.exit("needs CAP_NET_ADMIN; run via the systemd unit or with "
+                 "run0/pkexec.")
 
 
 def adapter_index(name):

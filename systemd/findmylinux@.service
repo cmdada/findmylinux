@@ -1,0 +1,19 @@
+[Unit]
+Description=Advertise this machine on Apple's Find My network (user %i)
+Documentation=https://github.com/cmdada/findmylinux
+After=bluetooth.service
+Requires=bluetooth.service
+StartLimitIntervalSec=120
+StartLimitBurst=2
+
+[Service]
+Type=exec
+User=%i
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW
+ExecStart=/home/ada/code/findmylinux/.venv/bin/python /home/ada/code/findmylinux/findmylinux.py start --adapter hci0
+ExecStopPost=/home/ada/code/findmylinux/.venv/bin/python /home/ada/code/findmylinux/findmylinux.py restore --adapter hci0
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target

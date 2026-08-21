@@ -11,15 +11,15 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 ln -sf "$SRC/findmylinux.py" /usr/local/bin/findmylinux
-install -m 644 "$SRC/systemd/findmylinux.service" /etc/systemd/system/
-install -m 644 "$SRC/systemd/findmylinux-resume.service" /etc/systemd/system/
+install -m 644 "$SRC/systemd/findmylinux@.service" /etc/systemd/system/
+install -m 644 "$SRC/systemd/findmylinux-resume@.service" /etc/systemd/system/
 systemctl daemon-reload
-systemctl enable findmylinux.service findmylinux-resume.service
+systemctl enable "findmylinux@$OWNER.service" "findmylinux-resume@$OWNER.service"
 
 if [ ! -e /etc/geolocation ]; then
 	install -o "$OWNER" -g geoclue -m 640 /dev/null /etc/geolocation
 fi
 
 echo "installed."
-echo "  start advertising : systemctl start findmylinux"
+echo "  start advertising : systemctl start findmylinux@'$OWNER'"
 echo "  report side       : systemctl --user enable --now findmylinux-anisette; findmylinux login"
